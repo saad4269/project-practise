@@ -5,8 +5,7 @@
 
 trigger:
 - master
-
-pool:
+variables: 
   vmImage: ubuntu-latest
 steps:
 - task: DotNetCoreCLI@2
@@ -20,10 +19,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*/*.csproj'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '*/*.json'
+
 - task: ArchiveFiles@2
   name: 'archive1'
   inputs:
@@ -32,19 +28,7 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
-- task: ArchiveFiles@2
-  name: 'archive2'
-  inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'ARM'
-    publishLocation: 'Container'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
