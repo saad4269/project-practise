@@ -19,7 +19,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*/*.csproj'
-
+    arguments: ''
 - task: ArchiveFiles@2
   name: 'archive1'
   inputs:
@@ -48,6 +48,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '*/Armtemplateforwebapptemplate.json'
     deploymentMode: 'Incremental'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
