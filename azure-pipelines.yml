@@ -7,6 +7,11 @@ trigger:
 - master
 variables: 
   vmImage: ubuntu-latest
+parameters:
+  - name: saad4269
+    type: string
+    default:
+
 steps:
 - task: DotNetCoreCLI@2
   name: 'restore'
@@ -28,6 +33,7 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
+
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
