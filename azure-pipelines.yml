@@ -43,8 +43,9 @@ steps:
     location: 'East US'
     templateLocation: 'Linked artifact'
     csmFile: '*/Armtemplateforcontainerregistry.json'
-    overrideParameters: 'registryparameters.json'
+    csmParametersFile: '*/registryparameters.json'
     deploymentMode: 'Incremental'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
