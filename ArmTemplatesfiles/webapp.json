@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "webAppName": {
-      "value": "dotnetapp"
+      "value": "dotnetapp1"
     },
     "hostingPlanName": {
       "value": "testing"
