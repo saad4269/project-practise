@@ -24,7 +24,7 @@
       "value": "eastus"
     },
     "registrySku": {
-      "value": "Standard_RAGRS"
+      "value": "Standard"
     },
     "startupCommand": {
       "value": "dotnet <myapp>.dll"
