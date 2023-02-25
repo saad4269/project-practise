@@ -33,7 +33,6 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
-
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
@@ -44,7 +43,9 @@ steps:
     location: 'East US'
     templateLocation: 'Linked artifact'
     csmFile: '*/Armtemplateforcontainerregistry.json'
+    csmParametersFile: 'registryparameters.json'
     deploymentMode: 'Incremental'
+
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Subscription'
