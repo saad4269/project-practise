@@ -27,7 +27,7 @@
       "value": "Standard_RAGRS"
     },
     "startupCommand": {
-      "value": null
+      "value": "dotnet <myapp>.dll"
     }
   }
 }
