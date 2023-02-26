@@ -45,6 +45,11 @@ steps:
     csmFile: '*/Armtemplateforcontainerregistry.json'
     csmParametersFile: '*/registryparameters.json'
     deploymentMode: 'Incremental'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'containerregistry'
+    publishLocation: 'Container'
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
@@ -60,5 +65,5 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
+    ArtifactName: 'webapp'
     publishLocation: 'Container'
