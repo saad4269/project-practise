@@ -80,23 +80,23 @@ stages:
       vmImage: ubuntu-latest
     environment: $(environmentName)
     strategy:
-     runOnce:
-      deploy:
-        steps:
-        - download: latest
-          artifact: containerregistry
-        - task: AzureCLI@2
-          inputs:
-            azureSubscription: 'Azure subscription 1 (bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
-            scriptType: 'bash'
-            scriptLocation: 'inlineScript'
-            inlineScript: 
-              az group deployment create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/current/Armtemplateforcontainerregistry.json --parameters $(System.DefaultWorkingDirectory)/current/registryparameters.json
-        - download: latest
-          artifact: webapp
-        - task: AzureCLI@2
-          inputs:
-            azureSubscription: 'Azure subscription 1 (bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
-            scriptType: 'bash'
-            scriptLocation: 'inlineScript'
-            inlineScript: 'az group deployment create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/current/Armtemplateforwebapptemplate.json --parameters $(System.DefaultWorkingDirectory)/current/webapp.json'
+      runOnce:
+        deploy:
+          steps:
+          - download: latest
+            artifact: containerregistry
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'Azure subscription 1 (bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: 
+                az group deployment create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/current/Armtemplateforcontainerregistry.json --parameters $(System.DefaultWorkingDirectory)/current/registryparameters.json
+          - download: latest
+            artifact: webapp
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'Azure subscription 1 (bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: 'az group deployment create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/current/Armtemplateforwebapptemplate.json --parameters $(System.DefaultWorkingDirectory)/current/webapp.json'
