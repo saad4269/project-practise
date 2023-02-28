@@ -67,7 +67,7 @@ stages:
         deploymentMode: 'Incremental'
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        PathtoPublish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
         ArtifactName: 'webapp'
         publishLocation: 'Container'
 - stage: Deploy
@@ -90,5 +90,5 @@ stages:
               azureSubscription: 'Azure subscription 1 (bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
               appType: 'webApp'
               appName: 'webapp4269'
-              package: '$(System.DefaultWorkingDirectory)/**/webapp.zip'
+              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               deploymentMethod: 'auto'
