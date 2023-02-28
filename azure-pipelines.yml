@@ -74,8 +74,9 @@ stages:
   dependsOn: Build
   condition: succeeded()
   jobs:
-  - deployment: DeployToAzure
-    environment: 'prod'
+  - deployment: Deploymentjob
+    pool:
+      vmImage: ubuntu-latest
     strategy:
      runOnce:
       deploy:
