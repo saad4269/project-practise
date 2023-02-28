@@ -8,6 +8,7 @@ trigger:
 variables:
   resourceGroupName: 'Taskby-saad'
   location: 'East US'
+  environmentName: 'Dev'
 stages:
 - stage: Build
   displayName: Build stage
@@ -77,6 +78,7 @@ stages:
   - deployment: Deploymentjob
     pool:
       vmImage: ubuntu-latest
+    environment: $(environmentName)
     strategy:
      runOnce:
       deploy:
