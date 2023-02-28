@@ -67,3 +67,28 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'webapp'
     publishLocation: 'Container'
+jobs:
+- deployment: DeployToAzure
+  environment: 'test'
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - download: current
+          artifact: containerregistry
+        - task: AzureCLI@2
+          inputs:
+            azureSubscription: 'Azure subscription 1'
+            scriptType: 'bash'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              az group deployment create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/current/Armtemplateforcontainerregistry.json --parameters $(System.DefaultWorkingDirectory)/current/registryparameters.json
+        - download: current
+          artifact: webapp
+        - task: AzureCLI@2
+          inputs:
+            azureSubscription: 'Azure subscription 1'
+            scriptType: 'bash'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              az group deployment create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/current/Armtemplateforwebapptemplate.json --parameters $(System.DefaultWorkingDirectory)/current/webapp.json
