@@ -83,7 +83,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - download: latest
+          - download: current
             artifact: containerregistry
           - task: AzureCLI@2
             inputs:
@@ -92,7 +92,7 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: 
                 az group deployment create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/current/Armtemplateforcontainerregistry.json --parameters $(System.DefaultWorkingDirectory)/current/registryparameters.json
-          - download: latest
+          - download: current
             artifact: webapp
           - task: AzureCLI@2
             inputs:
