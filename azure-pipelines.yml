@@ -19,14 +19,14 @@ stages:
     - task: DotNetCoreCLI@2
       name: 'restore'
       inputs:
-      command: 'restore'
-      projects: '**/*/*.csproj'
-      feedsToUse: 'select'
+        command: 'restore'
+        projects: '**/*/*.csproj'
+        feedsToUse: 'select'
     - task: DotNetCoreCLI@2
       inputs:
-      command: 'build'
-      projects: '**/*/*.csproj'
-      arguments: ''
+        command: 'build'
+        projects: '**/*/*.csproj'
+        arguments: ''
     - task: ArchiveFiles@2
       name: 'archive1'
       inputs:
@@ -37,16 +37,16 @@ stages:
         replaceExistingArchive: true
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
-      deploymentScope: 'Resource Group'
-      azureResourceManagerConnection: 'Azure subscription 1(1)(bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
-      subscriptionId: 'bee78d4f-49f3-4648-893a-e2ca59d0cb33'
-      action: 'Create Or Update Resource Group'
-      resourceGroupName: 'Taskby-saad'
-      location: 'East US'
-      templateLocation: 'Linked artifact'
-      csmFile: '*/Armtemplateforcontainerregistry.json'
-      csmParametersFile: '*/registryparameters.json'
-      deploymentMode: 'Incremental'
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Azure subscription 1(1)(bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
+        subscriptionId: 'bee78d4f-49f3-4648-893a-e2ca59d0cb33'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'Taskby-saad'
+        location: 'East US'
+        templateLocation: 'Linked artifact'
+        csmFile: '*/Armtemplateforcontainerregistry.json'
+        csmParametersFile: '*/registryparameters.json'
+        deploymentMode: 'Incremental'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
