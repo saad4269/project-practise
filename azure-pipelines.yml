@@ -5,76 +5,78 @@
 
 trigger:
 - master
-variables: 
-  vmImage: ubuntu-latest
-parameters:
-  - name: saad4269
-    type: string
-    default:
-
-steps:
-- task: DotNetCoreCLI@2
-  name: 'restore'
-  inputs:
-    command: 'restore'
-    projects: '**/*/*.csproj'
-    feedsToUse: 'select'
-- task: DotNetCoreCLI@2
-
-  inputs:
-    command: 'build'
-    projects: '**/*/*.csproj'
-    arguments: ''
-- task: ArchiveFiles@2
-  name: 'archive1'
-  inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-- task: AzureResourceManagerTemplateDeployment@3
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1(1)(bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
-    subscriptionId: 'bee78d4f-49f3-4648-893a-e2ca59d0cb33'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: 'Taskby-saad'
-    location: 'East US'
-    templateLocation: 'Linked artifact'
-    csmFile: '*/Armtemplateforcontainerregistry.json'
-    csmParametersFile: '*/registryparameters.json'
-    deploymentMode: 'Incremental'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'containerregistry'
-    publishLocation: 'Container'
-- task: AzureResourceManagerTemplateDeployment@3
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 (bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
-    subscriptionId: 'bee78d4f-49f3-4648-893a-e2ca59d0cb33'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: 'Taskby-saad'
-    location: 'East US'
-    templateLocation: 'Linked artifact'
-    csmFile: '*/Armtemplateforwebapptemplate.json'
-    csmParametersFile: '*/webapp.json'
-    deploymentMode: 'Incremental'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'webapp'
-    publishLocation: 'Container'
+variables:
+  resourceGroupName: 'Taskby-saad'
+  location: 'East US'
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: BuildJob
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: DotNetCoreCLI@2
+      name: 'restore'
+      inputs:
+      command: 'restore'
+      projects: '**/*/*.csproj'
+      feedsToUse: 'select'
+    - task: DotNetCoreCLI@2
+      inputs:
+      command: 'build'
+      projects: '**/*/*.csproj'
+      arguments: ''
+    - task: ArchiveFiles@2
+      name: 'archive1'
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        replaceExistingArchive: true
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1(1)(bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
+      subscriptionId: 'bee78d4f-49f3-4648-893a-e2ca59d0cb33'
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: 'Taskby-saad'
+      location: 'East US'
+      templateLocation: 'Linked artifact'
+      csmFile: '*/Armtemplateforcontainerregistry.json'
+      csmParametersFile: '*/registryparameters.json'
+      deploymentMode: 'Incremental'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'containerregistry'
+        publishLocation: 'Container'
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Azure subscription 1 (bee78d4f-49f3-4648-893a-e2ca59d0cb33)'
+        subscriptionId: 'bee78d4f-49f3-4648-893a-e2ca59d0cb33'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'Taskby-saad'
+        location: 'East US'
+        templateLocation: 'Linked artifact'
+        csmFile: '*/Armtemplateforwebapptemplate.json'
+        csmParametersFile: '*/webapp.json'
+        deploymentMode: 'Incremental'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'webapp'
+        publishLocation: 'Container'
 jobs:
 - deployment: DeployToAzure
-  environment: 'test'
+  environment: 'prod'
   strategy:
     runOnce:
       deploy:
         steps:
-        - download: current
+        - download: latest
           artifact: containerregistry
         - task: AzureCLI@2
           inputs:
@@ -83,7 +85,7 @@ jobs:
             scriptLocation: 'inlineScript'
             inlineScript: |
               az group deployment create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/current/Armtemplateforcontainerregistry.json --parameters $(System.DefaultWorkingDirectory)/current/registryparameters.json
-        - download: current
+        - download: latest
           artifact: webapp
         - task: AzureCLI@2
           inputs:
